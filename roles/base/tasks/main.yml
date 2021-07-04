@@ -1,0 +1,13 @@
+---
+# Add some base packages
+
+- name: Add Standard Packages
+  become: true
+  package:
+      name:
+          - git
+          - vim
+          - zsh
+          - docker
+          - python
+      state: present
