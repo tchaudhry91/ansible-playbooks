@@ -1,0 +1,16 @@
+---
+- name: Install PHP Packages
+  become: true
+  package:
+      name:
+          - php
+          - php-cli
+          - php-fpm
+      state: present
+
+- name: Start PHP-FPM
+  become: true
+  systemd:
+      name: php-fpm
+      enabled: yes
+      state: started

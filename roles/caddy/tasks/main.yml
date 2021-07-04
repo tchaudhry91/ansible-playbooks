@@ -1,0 +1,7 @@
+---
+- name: Download Caddy
+  become: true
+  get_url:
+      url: https://caddyserver.com/api/download?os=linux&arch=arm64&idempotency=5992170083166
+      dest: /usr/local/bin/caddy
+      mode: 755
