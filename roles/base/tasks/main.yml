@@ -9,7 +9,6 @@
           - vim
           - zsh
           - docker
-          - python
           - sudo
           - curl
       state: present
