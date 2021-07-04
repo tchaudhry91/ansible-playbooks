@@ -10,4 +10,28 @@
           - zsh
           - docker
           - python
+          - sudo
+          - curl
       state: present
+
+- name: Make sure we have a 'wheel' group
+  become: true
+  group:
+      name: wheel
+      state: present
+
+- name: Allow 'wheel' group to have passwordless sudo
+  become: true
+  lineinfile:
+      dest: /etc/sudoers
+      state: present
+      regexp: "^%wheel"
+      line: "%wheel ALL=(ALL) NOPASSWD: ALL"
+      validate: visudo -cf %s
+
+- name: Start and Enable Docker
+  become: true
+  systemd:
+      name: docker
+      enabled: yes
+      state: started

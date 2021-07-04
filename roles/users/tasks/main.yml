@@ -1,0 +1,25 @@
+---
+- name: Create User
+  become: true
+  user:
+      name: tchaudhry
+      comment: Tanmay Chaudhry
+      groups: wheel,docker
+      shell: /bin/zsh
+      password: "{{ default_password | password_hash('sha512') }}"
+      update_password: always
+      append: yes
+
+- name: Set Authorized Keys
+  become: true
+  authorized_key:
+      user: tchaudhry
+      state: present
+      key: "{{ pub_key_tchaudhry }}"
+
+- name: Setup OHMYZSH
+  become: true
+  become_user: tchaudhry
+  shell: curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh | bash -
+  args:
+      warn: no
