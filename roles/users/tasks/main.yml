@@ -7,7 +7,7 @@
       groups: wheel
       shell: /bin/zsh
       password: "{{ default_password | password_hash('sha512') }}"
-      update_password: always
+      update_password: on_create
       append: yes
 
 - name: Set Authorized Keys
