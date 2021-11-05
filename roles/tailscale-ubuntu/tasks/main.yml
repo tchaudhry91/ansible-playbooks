@@ -1,0 +1,23 @@
+---
+# Install Tailscale using a Pre-Auth Key
+
+- name: Add Keys
+  become: true
+  apt_key:
+      url: https://pkgs.tailscale.com/stable/ubuntu/focal.gpg
+      state: present
+
+- name: Add Repo
+  become: true
+  shell: "curl -fsSL https://pkgs.tailscale.com/stable/ubuntu/focal.list | sudo tee /etc/apt/sources.list.d/tailscale.list"
+
+- name: Install Package
+  become: true
+  apt:
+      name: tailscale
+      update_cache: true
+      state: present
+
+- name: Enable Tailscale
+  become: true
+  shell: "tailscale up --authkey {{ tailscale_preauth_key }}"
