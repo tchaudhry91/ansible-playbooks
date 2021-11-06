@@ -1,15 +1,33 @@
 ---
-- name: Untar the Archive
+- name: Check Architecture
+  debug:
+    var: ansible_architecture
+
+- name: Untar the Archive for AMD64
   become: true
   unarchive:
     src: https://github.com/prometheus/node_exporter/releases/download/v1.2.2/node_exporter-1.2.2.linux-amd64.tar.gz
     dest: /tmp
     creates: /tmp/node_exporter-1.2.2.linux-amd64
     remote_src: true
+  when: ansible_architecture == "x86_64"
+
+- name: Untar the Archive for ARM64
+  become: true
+  unarchive:
+    src: https://github.com/prometheus/node_exporter/releases/download/v1.2.2/node_exporter-1.2.2.linux-arm64.tar.gz
+    dest: /tmp
+    creates: /tmp/node_exporter-1.2.2.linux-arm64
+    remote_src: true
+  when: ansible_architecture == "aarch64"
+
+- name: Rename the Directory
+  become: true
+  shell: "mv /tmp/node_exporter-* /tmp/node_exporter"
   
 - name: Move the binary
   become: true
-  shell: "mv /tmp/node_exporter-1.2.2.linux-amd64/node_exporter /usr/local/bin/"
+  shell: "mv /tmp/node_exporter/node_exporter /usr/local/bin/"
 
 - name: Copy over systemd service
   become: true
@@ -25,10 +43,10 @@
     daemon_reload: true
     name: node_exporter
     enabled: yes
-    state: started
+    state: restarted
 
 - name: Cleanup
   become: true
   file:
-    path: /tmp/node_exporter-1.2.2.linux-amd64
+    path: /tmp/node_exporter
     state: absent
