@@ -23,3 +23,4 @@
   shell: curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh | bash -
   args:
       warn: no
+      creates: /home/tchaudhry/.zshrc

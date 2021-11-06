@@ -1,0 +1,34 @@
+---
+- name: Untar the Archive
+  become: true
+  unarchive:
+    src: https://github.com/prometheus/node_exporter/releases/download/v1.2.2/node_exporter-1.2.2.linux-amd64.tar.gz
+    dest: /tmp
+    creates: /tmp/node_exporter-1.2.2.linux-amd64
+    remote_src: true
+  
+- name: Move the binary
+  become: true
+  shell: "mv /tmp/node_exporter-1.2.2.linux-amd64/node_exporter /usr/local/bin/"
+
+- name: Copy over systemd service
+  become: true
+  copy:
+    src: node_exporter.service
+    dest: /etc/systemd/system/
+    owner: root
+    mode: 644
+
+- name: Reload Systemd Daemon
+  become: true
+  systemd:
+    daemon_reload: true
+    name: node_exporter
+    enabled: yes
+    state: started
+
+- name: Cleanup
+  become: true
+  file:
+    path: /tmp/node_exporter-1.2.2.linux-amd64
+    state: absent
