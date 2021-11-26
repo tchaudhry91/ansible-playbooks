@@ -10,6 +10,17 @@
       update_password: on_create
       append: yes
 
+- name: Create User asc-tc
+  become: true
+  user:
+      name: asc-tc
+      comment: Tanmay Chaudhry
+      groups: wheel
+      shell: /bin/zsh
+      password: "{{ default_password | password_hash('sha512') }}"
+      update_password: on_create
+      append: yes
+
 - name: Set Authorized Keys
   become: true
   authorized_key:

@@ -1,0 +1,26 @@
+---
+# Add Trusted Key to SSHD Config
+
+- name: Grab the VaultSigner SSH CA
+  become: true
+  shell: "curl -s -o /etc/ssh/tux-sudo-vault-signer.pem https://secrets.ts.tux-sudo.com/v1/tux-sudo-ssh-signer/public_key"
+
+- name: Fix the permissions
+  become: true
+  file:
+      path: /etc/ssh/tux-sudo-vault-signer.pem
+      owner: root
+      group: root
+      mode: "0400"
+
+- name: Check Line in SSHD Config
+  become: true
+  lineinfile:
+      path: /etc/ssh/sshd_config
+      regexp: "^TrustedUserCAKeys "
+      line: "TrustedUserCAKey /etc/ssh/tux-sudo-vault-signer.pem"
+
+- name: Restart SSHD
+  systemd:
+      state: restarted
+      name: sshd
