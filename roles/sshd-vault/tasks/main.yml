@@ -18,7 +18,7 @@
   lineinfile:
       path: /etc/ssh/sshd_config
       regexp: "^TrustedUserCAKeys "
-      line: "TrustedUserCAKey /etc/ssh/tux-sudo-vault-signer.pem"
+      line: "TrustedUserCAKeys /etc/ssh/tux-sudo-vault-signer.pem"
 
 - name: Restart SSHD
   systemd:
