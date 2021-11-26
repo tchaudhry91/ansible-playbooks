@@ -20,6 +20,13 @@
       regexp: "^TrustedUserCAKeys "
       line: "TrustedUserCAKeys /etc/ssh/tux-sudo-vault-signer.pem"
 
+- name: Check Line in SSHD Config
+  become: true
+  lineinfile:
+      path: /etc/ssh/sshd_config
+      regexp: "^CASignatureAlgorithms "
+      line: "CASignatureAlgorithms ^ssh-rsa"
+
 - name: Restart SSHD
   systemd:
       state: restarted
